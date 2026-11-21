@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eligibility Checker | Bharat Sahayak AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f7fb;
+            color: #333;
+        }
+
+        header {
+            background: white;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px #ddd;
+        }
+
+        header h2 {
+            color: #174b83;
+            margin: 0;
+        }
+
+        header a {
+            text-decoration: none;
+            color: #174b83;
+            font-weight: bold;
+        }
+        header select {
+            padding: 8px;
+            margin-left: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+      }
+
+        .heading {
+            text-align: center;
+            padding: 40px 15px;
+            background: linear-gradient(120deg, #e7f2ff, #fff4e6);
+        }
+
+        .heading h1 {
+            color: #174b83;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 35px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px #ddd;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background: #174b83;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e67e22;
+        }
+
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            background: #eef5ff;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .scheme {
+            background: white;
+            padding: 15px;
+            margin-top: 12px;
+            border-radius: 7px;
+            border-left: 4px solid #174b83;
+        }
+
+        footer {
+            background: #174b83;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>Bharat Sahayak AI</h2>
+
+    <div>
+        <a href="/">Home</a>
+
+        <select id="languageSelector" onchange="changePageLanguage(this.value)">
+            <option value="English">English</option>
+            <option value="Telugu">తెలుగు</option>
+            <option value="Hindi">हिंदी</option>
+            <option value="Tamil">தமிழ்</option>
+            <option value="Kannada">ಕನ್ನಡ</option>
+        </select>
+    </div>
+</header>
+
+<section class="heading">
+    <h1>Check Your Eligibility</h1>
+    <p>Enter your details to discover potentially suitable schemes.</p>
+</section>
+
+<div class="container">
+
+    <h2>Your Details</h2>
+
+    <form id="eligibilityForm">
+
+        <label>Age</label>
+        <input type="number" id="age" min="1" max="120" required>
+
+        <label>Annual Family Income (₹)</label>
+        <input type="number" id="income" min="0" required>
+
+        <label>Occupation</label>
+        <select id="occupation" required>
+            <option value="">Select Occupation</option>
+            <option value="student">Student</option>
+            <option value="farmer">Farmer</option>
+            <option value="employee">Employee</option>
+            <option value="unemployed">Unemployed</option>
+        </select>
+
+
+        <!-- Paste new fields here -->
+        <label>Education Level</label>
+        <select id="education" required>
+            <option value="">Select Education</option>
+            <option value="School">School</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="ITI">ITI</option>
+            <option value="Polytechnic">Polytechnic</option>
+            <option value="Undergraduate">Degree / B.Tech</option>
+            <option value="Postgraduate">Postgraduate</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Social Category</label>
+        <select id="category" required>
+            <option value="">Select Category</option>
+            <option value="General">General</option>
+            <option value="EWS">EWS</option>
+            <option value="SC">SC</option>
+            <option value="ST">ST</option>
+            <option value="BC">BC</option>
+            <option value="Minority">Minority</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+        </select>
+
+        <!-- Existing State field continues here -->
+        <label>State</label>
+
+        <select id="state" required>
+            <option value="">Select State</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Other">Other State</option>
+        </select>
+        <label>Preferred Language</label>
+        <select id="language" required>
+            <option value="English">English</option>
+            <option value="Telugu">తెలుగు (Telugu)</option>
+            <option value="Hindi">हिंदी (Hindi)</option>
+            <option value="Tamil">தமிழ் (Tamil)</option>
+            <option value="Kannada">ಕನ್ನಡ (Kannada)</option>
+        </select>
+
+        <button type="submit">Check Eligibility</button>
+
+    </form>
+
+    <div id="result"></div>
+
+</div>
+
+<footer>
+    Bharat Sahayak AI | Government Services Made Simple
+</footer>
+
+
+<script>
+document.getElementById("eligibilityForm").addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const age = document.getElementById("age").value;
+    const income = document.getElementById("income").value;
+    const occupation = document.getElementById("occupation").value;
+    const education = document.getElementById("education").value;
+    const category = document.getElementById("category").value;
+    const state = document.getElementById("state").value;
+    const language = document.getElementById("language").value;
+
+    const result = document.getElementById("result");
+    const button = this.querySelector("button");
+
+    result.style.display = "block";
+    result.style.whiteSpace = "pre-wrap";
+    result.textContent = "Checking your eligibility using Sahayak AI... Please wait.";
+
+    button.disabled = true;
+    button.textContent = "Checking...";
+
+    const message = `
+Analyze potentially suitable Indian Central Government and State Government schemes for this person.
+
+Age: ${age}
+Annual Family Income: ₹${income}
+Occupation: ${occupation}
+Education Level: ${education}
+Social Category: ${category}
+State: ${state}
+
+Please:
+1. Suggest relevant schemes based on these details.
+2. Explain the purpose and benefits of each scheme.
+3. Explain why each scheme may be relevant.
+4. Mention important eligibility conditions.
+5. Clearly identify any missing information.
+6. Explain how to verify eligibility and apply through official sources.
+
+Respond in ${language} using simple and easy-to-understand words.
+Do not guarantee eligibility.
+Do not invent scheme names, benefits, income limits or eligibility rules.
+If current information is uncertain, clearly mention that it needs official verification.
+`;
+
+    try {
+
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: message
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.reply || "Unable to check eligibility.");
+        }
+
+        result.textContent = data.reply || "Sorry, no response received. Please try again.";
+
+    } catch (error) {
+
+        result.textContent = "Error: " + error.message +
+            "\nPlease check your internet connection and try again.";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = eligibilityTranslations[
+            localStorage.getItem("selectedLanguage") || "English"
+        ].button;
+
+    }
+
+});
+
+const eligibilityTranslations = {
+    English: {
+        title: "Check Your Eligibility",
+        subtitle: "Enter your details to discover potentially suitable schemes.",
+        details: "Your Details",
+        labels: ["Age", "Annual Family Income (₹)", "Occupation", "Education Level", "Social Category", "State", "Preferred Language"],
+        options: [
+            ["Select Occupation", "Student", "Farmer", "Employee", "Unemployed"],
+            ["Select Education", "School", "Intermediate", "ITI", "Polytechnic", "Degree / B.Tech", "Postgraduate", "Other"],
+            ["Select Category", "General", "EWS", "SC", "ST", "BC", "Minority", "Prefer not to say"],
+            ["Select State", "Andhra Pradesh", "Other State"]
+        ],
+        button: "Check Eligibility",
+        checking: "Checking...",
+        wait: "Checking your eligibility using Sahayak AI... Please wait.",
+        footer: "Bharat Sahayak AI | Government Services Made Simple"
+    },
+    Telugu: {
+        title: "మీ అర్హతను తనిఖీ చేయండి",
+        subtitle: "మీకు సరిపోయే ప్రభుత్వ పథకాలను తెలుసుకోవడానికి వివరాలు నమోదు చేయండి.",
+        details: "మీ వివరాలు",
+        labels: ["వయస్సు", "వార్షిక కుటుంబ ఆదాయం (₹)", "వృత్తి", "విద్యా స్థాయి", "సామాజిక వర్గం", "రాష్ట్రం", "మీకు కావలసిన భాష"],
+        options: [
+            ["వృత్తిని ఎంచుకోండి", "విద్యార్థి", "రైతు", "ఉద్యోగి", "నిరుద్యోగి"],
+            ["విద్యను ఎంచుకోండి", "పాఠశాల", "ఇంటర్మీడియట్", "ITI", "పాలిటెక్నిక్", "డిగ్రీ / B.Tech", "పోస్ట్ గ్రాడ్యుయేట్", "ఇతర"],
+            ["వర్గాన్ని ఎంచుకోండి", "జనరల్", "EWS", "SC", "ST", "BC", "మైనారిటీ", "చెప్పదలచుకోలేదు"],
+            ["రాష్ట్రాన్ని ఎంచుకోండి", "ఆంధ్రప్రదేశ్", "ఇతర రాష్ట్రం"]
+        ],
+        button: "అర్హత తనిఖీ చేయండి",
+        checking: "తనిఖీ చేస్తోంది...",
+        wait: "సహాయక్ AI ద్వారా మీ అర్హతను తనిఖీ చేస్తున్నాము... దయచేసి వేచి ఉండండి.",
+        footer: "భారత్ సహాయక్ AI | ప్రభుత్వ సేవలు సులభంగా"
+    },
+    Hindi: {
+        title: "अपनी पात्रता जाँचें",
+        subtitle: "उपयुक्त सरकारी योजनाएँ जानने के लिए अपना विवरण भरें।",
+        details: "आपका विवरण",
+        labels: ["आयु", "वार्षिक पारिवारिक आय (₹)", "व्यवसाय", "शिक्षा का स्तर", "सामाजिक वर्ग", "राज्य", "पसंदीदा भाषा"],
+        options: [
+            ["व्यवसाय चुनें", "विद्यार्थी", "किसान", "कर्मचारी", "बेरोजगार"],
+            ["शिक्षा चुनें", "स्कूल", "इंटरमीडिएट", "ITI", "पॉलिटेक्निक", "डिग्री / B.Tech", "स्नातकोत्तर", "अन्य"],
+            ["वर्ग चुनें", "सामान्य", "EWS", "SC", "ST", "BC", "अल्पसंख्यक", "नहीं बताना चाहते"],
+            ["राज्य चुनें", "आंध्र प्रदेश", "अन्य राज्य"]
+        ],
+        button: "पात्रता जाँचें",
+        checking: "जाँच हो रही है...",
+        wait: "सहायक AI आपकी पात्रता जाँच रहा है... कृपया प्रतीक्षा करें।",
+        footer: "भारत सहायक AI | सरकारी सेवाएँ आसान बनाएँ"
+    },
+    Tamil: {
+        title: "உங்கள் தகுதியைச் சரிபார்க்கவும்",
+        subtitle: "உங்களுக்குப் பொருத்தமான திட்டங்களைக் கண்டறிய விவரங்களை உள்ளிடுங்கள்.",
+        details: "உங்கள் விவரங்கள்",
+        labels: ["வயது", "ஆண்டு குடும்ப வருமானம் (₹)", "தொழில்", "கல்வி நிலை", "சமூகப் பிரிவு", "மாநிலம்", "விருப்ப மொழி"],
+        options: [
+            ["தொழிலைத் தேர்ந்தெடுக்கவும்", "மாணவர்", "விவசாயி", "பணியாளர்", "வேலையில்லாதவர்"],
+            ["கல்வியைத் தேர்ந்தெடுக்கவும்", "பள்ளி", "இடைநிலைக் கல்வி", "ITI", "பாலிடெக்னிக்", "பட்டம் / B.Tech", "முதுகலை", "மற்றவை"],
+            ["பிரிவைத் தேர்ந்தெடுக்கவும்", "பொது", "EWS", "SC", "ST", "BC", "சிறுபான்மையினர்", "தெரிவிக்க விருப்பமில்லை"],
+            ["மாநிலத்தைத் தேர்ந்தெடுக்கவும்", "ஆந்திரப் பிரதேசம்", "மற்ற மாநிலம்"]
+        ],
+        button: "தகுதியைச் சரிபார்க்கவும்",
+        checking: "சரிபார்க்கப்படுகிறது...",
+        wait: "உங்கள் தகுதியை Sahayak AI சரிபார்க்கிறது... காத்திருக்கவும்.",
+        footer: "பாரத் சகாயக் AI | அரசு சேவைகள் எளிமையாக"
+    },
+    Kannada: {
+        title: "ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸಿ",
+        subtitle: "ನಿಮಗೆ ಸೂಕ್ತವಾದ ಯೋಜನೆಗಳನ್ನು ತಿಳಿಯಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.",
+        details: "ನಿಮ್ಮ ವಿವರಗಳು",
+        labels: ["ವಯಸ್ಸು", "ವಾರ್ಷಿಕ ಕುಟುಂಬ ಆದಾಯ (₹)", "ಉದ್ಯೋಗ", "ಶಿಕ್ಷಣದ ಮಟ್ಟ", "ಸಾಮಾಜಿಕ ವರ್ಗ", "ರಾಜ್ಯ", "ಆದ್ಯತೆಯ ಭಾಷೆ"],
+        options: [
+            ["ಉದ್ಯೋಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ", "ವಿದ್ಯಾರ್ಥಿ", "ರೈತ", "ಉದ್ಯೋಗಿ", "ನಿರುದ್ಯೋಗಿ"],
+            ["ಶಿಕ್ಷಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ", "ಶಾಲೆ", "ಇಂಟರ್ಮೀಡಿಯೇಟ್", "ITI", "ಪಾಲಿಟೆಕ್ನಿಕ್", "ಪದವಿ / B.Tech", "ಸ್ನಾತಕೋತ್ತರ", "ಇತರೆ"],
+            ["ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ", "ಸಾಮಾನ್ಯ", "EWS", "SC", "ST", "BC", "ಅಲ್ಪಸಂಖ್ಯಾತರು", "ಹೇಳಲು ಇಷ್ಟವಿಲ್ಲ"],
+            ["ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ", "ಆಂಧ್ರ ಪ್ರದೇಶ", "ಇತರೆ ರಾಜ್ಯ"]
+        ],
+        button: "ಅರ್ಹತೆ ಪರಿಶೀಲಿಸಿ",
+        checking: "ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ...",
+        wait: "Sahayak AI ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸುತ್ತಿದೆ... ದಯವಿಟ್ಟು ಕಾಯಿರಿ.",
+        footer: "ಭಾರತ್ ಸಹಾಯಕ್ AI | ಸರ್ಕಾರಿ ಸೇವೆಗಳು ಸರಳವಾಗಿ"
+    }
+};
+
+function changePageLanguage(language) {
+    const t = eligibilityTranslations[language] || eligibilityTranslations.English;
+
+    document.querySelector(".heading h1").innerText = t.title;
+    document.querySelector(".heading p").innerText = t.subtitle;
+    document.querySelector(".container h2").innerText = t.details;
+
+    document.querySelectorAll(".container form > label").forEach((label, i) => {
+        label.innerText = t.labels[i];
+    });
+
+    const selectIds = ["occupation", "education", "category", "state"];
+    selectIds.forEach((id, i) => {
+        const select = document.getElementById(id);
+        select.querySelectorAll("option").forEach((option, j) => {
+            if (t.options[i][j]) option.textContent = t.options[i][j];
+        });
+    });
+
+    document.querySelector("#eligibilityForm button").innerText = t.button;
+    document.querySelector("footer").innerText = t.footer;
+
+    document.getElementById("languageSelector").value = language;
+    localStorage.setItem("selectedLanguage", language);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const saved = localStorage.getItem("selectedLanguage") || "English";
+    changePageLanguage(saved);
+    document.getElementById("language").value = saved;
+});
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahayak AI - Chatbot</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #174a8b;
+            color: white;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 {
+            font-size: 24px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        header select {
+            padding: 8px;
+            margin-left: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+       }
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            color: #174a8b;
+            margin-bottom: 10px;
+        }
+
+        .heading p {
+            color: #555;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        #chatBox {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 10px;
+            max-width: 85%;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .user-message {
+            background: #dceaff;
+            color: #173b68;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background: #edf1f6;
+            color: #222;
+            align-self: flex-start;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        #sendButton {
+            background: #174a8b;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        #sendButton:hover {
+            background: #0e3568;
+        }
+
+        #sendButton:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px auto;
+                padding: 12px;
+            }
+
+            #chatBox {
+                height: 420px;
+            }
+
+            header {
+                padding: 16px 5%;
+            }
+
+            header h2 {
+                font-size: 20px;
+            }
+
+            .input-area {
+                gap: 6px;
+            }
+
+            #sendButton {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+    <h2>Sahayak AI</h2>
+
+    <div>
+        <a href="/">Home</a>
+
+        <select id="languageSelector" onchange="changeChatLanguage(this.value)">
+            <option value="English">English</option>
+            <option value="Telugu">తెలుగు</option>
+            <option value="Hindi">हिंदी</option>
+            <option value="Tamil">தமிழ்</option>
+            <option value="Kannada">ಕನ್ನಡ</option>
+        </select>
+      </div>
+  </header>
+
+    <div class="container">
+
+        <div class="heading">
+            <h1>AI Government Scheme Assistant</h1>
+            <p>Ask your questions in Telugu or English.</p>
+        </div>
+
+        <div class="chat-container">
+
+            <div id="chatBox">
+                <div class="message bot-message">
+                    Hello! Welcome to Sahayak AI.
+
+                    I can help you understand government schemes, benefits and eligibility.
+
+                    You can ask your questions in Telugu or English.
+                </div>
+            </div>
+
+            <div class="input-area">
+                <input
+                    type="text"
+                    id="userInput"
+                    placeholder="Ask your question here..."
+                    onkeydown="if(event.key === 'Enter') sendMessage()"
+                >
+
+                <button id="sendButton" onclick="sendMessage()">
+                    Send
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+
+            const input = document.getElementById("userInput");
+            const chatBox = document.getElementById("chatBox");
+            const sendButton = document.getElementById("sendButton");
+
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Display user message
+            const userMessage = document.createElement("div");
+            userMessage.className = "message user-message";
+            userMessage.textContent = message;
+
+            chatBox.appendChild(userMessage);
+
+            input.value = "";
+            sendButton.disabled = true;
+
+            // Display loading message
+            const loading = document.createElement("div");
+            loading.className = "message bot-message";
+            loading.textContent = chatbotTranslations[
+                 localStorage.getItem("selectedLanguage") || "English"
+            ] .thinking; 
+
+            chatBox.appendChild(loading);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: message + "\n\nPlease respond in " +
+                           (localStorage.getItem("selectedLanguage") || "English") +
+                           " using simple words."
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.reply || "Something went wrong.");
+                }
+
+                loading.textContent = data.reply || "No response received.";
+
+            } catch (error) {
+
+                loading.textContent =
+                    "Sorry! " + error.message;
+
+                console.error("Chatbot error:", error);
+
+            } finally {
+
+                sendButton.disabled = false;
+                input.focus();
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+            }
+        }
+
+const chatbotTranslations = {
+    English: {
+        title: "AI Government Scheme Assistant",
+        subtitle: "Ask your questions in Telugu or English.",
+        welcome: "Hello! Welcome to Sahayak AI.\n\nI can help you understand government schemes, benefits and eligibility.\n\nYou can ask your questions in Telugu or English.",
+        placeholder: "Ask your question here...",
+        send: "Send",
+        thinking: "Sahayak AI is thinking..."
+    },
+    Telugu: {
+        title: "ప్రభుత్వ పథకాల AI సహాయకుడు",
+        subtitle: "మీ ప్రశ్నలను తెలుగులో అడగండి.",
+        welcome: "హలో! సహాయక్ AI కి స్వాగతం.\n\nప్రభుత్వ పథకాలు, ప్రయోజనాలు మరియు అర్హతలను తెలుసుకోవడంలో నేను సహాయపడతాను.\n\nమీ ప్రశ్నలను తెలుగులో అడగవచ్చు.",
+        placeholder: "మీ ప్రశ్నను ఇక్కడ అడగండి...",
+        send: "పంపండి",
+        thinking: "సహాయక్ AI ఆలోచిస్తోంది..."
+    },
+    Hindi: {
+        title: "सरकारी योजनाओं का AI सहायक",
+        subtitle: "अपने प्रश्न हिंदी में पूछें।",
+        welcome: "नमस्ते! Sahayak AI में आपका स्वागत है।\n\nमैं सरकारी योजनाओं, लाभों और पात्रता को समझने में आपकी मदद कर सकता हूँ।",
+        placeholder: "अपना प्रश्न यहाँ पूछें...",
+        send: "भेजें",
+        thinking: "Sahayak AI सोच रहा है..."
+    },
+    Tamil: {
+        title: "அரசுத் திட்டங்களுக்கான AI உதவியாளர்",
+        subtitle: "உங்கள் கேள்விகளைத் தமிழில் கேளுங்கள்.",
+        welcome: "வணக்கம்! Sahayak AI-க்கு வரவேற்கிறோம்.\n\nஅரசுத் திட்டங்கள், நன்மைகள் மற்றும் தகுதிகளைப் புரிந்துகொள்ள நான் உதவுவேன்.",
+        placeholder: "உங்கள் கேள்வியை இங்கே கேளுங்கள்...",
+        send: "அனுப்பு",
+        thinking: "Sahayak AI யோசிக்கிறது..."
+    },
+    Kannada: {
+        title: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ AI ಸಹಾಯಕ",
+        subtitle: "ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಕನ್ನಡದಲ್ಲಿ ಕೇಳಿ.",
+        welcome: "ನಮಸ್ಕಾರ! Sahayak AI ಗೆ ಸ್ವಾಗತ.\n\nಸರ್ಕಾರಿ ಯೋಜನೆಗಳು, ಪ್ರಯೋಜನಗಳು ಮತ್ತು ಅರ್ಹತೆಗಳನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ನಾನು ಸಹಾಯ ಮಾಡುತ್ತೇನೆ.",
+        placeholder: "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಇಲ್ಲಿ ಕೇಳಿ...",
+        send: "ಕಳುಹಿಸಿ",
+        thinking: "Sahayak AI ಯೋಚಿಸುತ್ತಿದೆ..."
+    }
+};
+
+function changeChatLanguage(language) {
+    const t = chatbotTranslations[language] || chatbotTranslations.English;
+
+    document.querySelector(".heading h1").textContent = t.title;
+    document.querySelector(".heading p").textContent = t.subtitle;
+    document.getElementById("userInput").placeholder = t.placeholder;
+    document.getElementById("sendButton").textContent = t.send;
+
+    const welcome = document.querySelector("#chatBox .bot-message");
+
+    if (welcome && welcome.dataset.initial === "true") {
+        welcome.textContent = t.welcome;
+    }
+
+    const saved = localStorage.getItem("selectedLanguage") || "English";
+    const selected = language || saved;
+
+    document.getElementById("languageSelector").value = selected;
+    localStorage.setItem("selectedLanguage", selected);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const welcome = document.querySelector("#chatBox .bot-message");
+    welcome.dataset.initial = "true";
+
+    const saved = localStorage.getItem("selectedLanguage") || "English";
+    changeChatLanguage(saved);
+});
+
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Guide | Sahayak AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f7fb;
+            color: #333;
+        }
+
+        header {
+            background: white;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 {
+            color: #174b83;
+        }
+
+        header a {
+            color: #174b83;
+            text-decoration: none;
+        }
+        header select {
+           width: auto;
+           padding: 8px;
+           margin-left: 15px;
+           border: 1px solid #ccc;
+           border-radius: 5px;
+           cursor: pointer;
+           font-size: 14px;
+      }
+
+        .hero {
+            text-align: center;
+            padding: 45px 15px;
+            background: linear-gradient(120deg, #e7f2ff, #fff4e6);
+        }
+
+        .hero h1 {
+            color: #174b83;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px #ddd;
+        }
+
+        select {
+            width: 100%;
+            padding: 13px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            background: #174b83;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #e67e22;
+        }
+
+        #result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef5ff;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+
+        footer {
+            background: #174b83;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>Sahayak AI</h2>
+
+    <div>
+        <a href="/">Home</a>
+
+        <select id="languageSelector" onchange="changeGuideLanguage(this.value)">
+            <option value="English">English</option>
+            <option value="Telugu">తెలుగు</option>
+            <option value="Hindi">हिंदी</option>
+            <option value="Tamil">தமிழ்</option>
+            <option value="Kannada">ಕನ್ನಡ</option>
+        </select>
+    </div>
+</header>
+
+<section class="hero">
+    <h1>Government Scheme Application Guide</h1>
+    <p>Know the documents and steps required to apply.</p>
+</section>
+
+<div class="container">
+
+    <h2>Select a Government Scheme</h2>
+
+    <select id="scheme">
+    <option value="">Choose a scheme</option>
+    <option value="education">Vidya Deevena</option>
+    <option value="farmer">PM-KISAN</option>
+    <option value="health">Ayushman Bharat PM-JAY</option>
+    <option value="skill">PMKVY</option>
+    <option value="housing">PM Awas Yojana</option>
+    <option value="women">PM Ujjwala Yojana</option>
+    <option value="crop">PM Fasal Bima Yojana</option>
+    <option value="solar">PM Surya Ghar</option>
+</select>
+    <button onclick="showGuide()">Get Application Guide</button>
+
+    <div id="result"></div>
+
+</div>
+
+<footer>
+    Sahayak AI | Government Services Made Simple
+</footer>
+
+<script>
+const guideTranslations = {
+    English: {
+        title: "Government Scheme Application Guide",
+        subtitle: "Know the documents and steps required to apply.",
+        select: "Select a Government Scheme",
+        choose: "Choose a scheme",
+        button: "Get Application Guide",
+        documents: "Required Documents",
+        steps: "Application Procedure",
+        note: "Note:",
+        warning: "Document requirements and procedures may change. Verify the latest requirements through official sources.",
+        alert: "Please select a scheme.",
+        schemes: ["Vidya Deevena", "PM-KISAN", "Ayushman Bharat PM-JAY", "PMKVY", "PM Awas Yojana", "PM Ujjwala Yojana", "PM Fasal Bima Yojana", "PM Surya Ghar"],
+        home: "Home",
+        footer: "Sahayak AI | Government Services Made Simple"
+    },
+
+    Telugu: {
+        title: "ప్రభుత్వ పథకాల దరఖాస్తు మార్గదర్శిని",
+        subtitle: "దరఖాస్తు చేయడానికి అవసరమైన పత్రాలు మరియు దశలను తెలుసుకోండి.",
+        select: "ప్రభుత్వ పథకాన్ని ఎంచుకోండి",
+        choose: "పథకాన్ని ఎంచుకోండి",
+        button: "దరఖాస్తు మార్గదర్శిని పొందండి",
+        documents: "అవసరమైన పత్రాలు",
+        steps: "దరఖాస్తు విధానం",
+        note: "గమనిక:",
+        warning: "పత్రాలు మరియు దరఖాస్తు విధానాలు మారవచ్చు. తాజా వివరాలను అధికారిక వెబ్‌సైట్లలో తనిఖీ చేయండి.",
+        alert: "దయచేసి ఒక పథకాన్ని ఎంచుకోండి.",
+        schemes: ["విద్యా దీవెన", "PM-KISAN", "ఆయుష్మాన్ భారత్ PM-JAY", "PMKVY", "ప్రధాన మంత్రి ఆవాస్ యోజన", "ప్రధాన మంత్రి ఉజ్వల యోజన", "ప్రధాన మంత్రి ఫసల్ బీమా యోజన", "ప్రధాన మంత్రి సూర్య ఘర్"],
+        home: "హోమ్",
+        footer: "సహాయక్ AI | ప్రభుత్వ సేవలు సులభంగా"
+    },
+
+    Hindi: {
+        title: "सरकारी योजना आवेदन मार्गदर्शिका",
+        subtitle: "आवेदन के लिए आवश्यक दस्तावेज़ और चरण जानें।",
+        select: "एक सरकारी योजना चुनें",
+        choose: "योजना चुनें",
+        button: "आवेदन मार्गदर्शिका प्राप्त करें",
+        documents: "आवश्यक दस्तावेज़",
+        steps: "आवेदन प्रक्रिया",
+        note: "ध्यान दें:",
+        warning: "दस्तावेज़ और प्रक्रियाएँ बदल सकती हैं। नवीनतम जानकारी आधिकारिक स्रोतों से जाँचें।",
+        alert: "कृपया एक योजना चुनें।",
+        schemes: ["जगनन्ना विद्या दीवेना", "PM-KISAN", "आयुष्मान भारत PM-JAY", "PMKVY", "प्रधानमंत्री आवास योजना", "प्रधानमंत्री उज्ज्वला योजना", "प्रधानमंत्री फसल बीमा योजना", "प्रधानमंत्री सूर्य घर"],
+        home: "होम",
+        footer: "सहायक AI | सरकारी सेवाएँ आसान बनाएँ"
+    },
+
+    Tamil: {
+        title: "அரசுத் திட்ட விண்ணப்ப வழிகாட்டி",
+        subtitle: "விண்ணப்பிக்கத் தேவையான ஆவணங்கள் மற்றும் படிகளை அறியுங்கள்.",
+        select: "அரசுத் திட்டத்தைத் தேர்ந்தெடுக்கவும்",
+        choose: "திட்டத்தைத் தேர்ந்தெடுக்கவும்",
+        button: "விண்ணப்ப வழிகாட்டியைப் பெறுங்கள்",
+        documents: "தேவையான ஆவணங்கள்",
+        steps: "விண்ணப்ப நடைமுறை",
+        note: "குறிப்பு:",
+        warning: "ஆவணங்கள் மற்றும் நடைமுறைகள் மாறலாம். சமீபத்திய விவரங்களை அதிகாரப்பூர்வ ஆதாரங்களில் சரிபார்க்கவும்.",
+        alert: "தயவுசெய்து ஒரு திட்டத்தைத் தேர்ந்தெடுக்கவும்.",
+        schemes: ["ஜெகனண்ணா வித்யா தீவேனா", "PM-KISAN", "ஆயுஷ்மான் பாரத் PM-JAY", "PMKVY", "பிரதான் மந்திரி ஆவாஸ் யோஜனா", "பிரதான் மந்திரி உஜ்வலா யோஜனா", "பிரதான் மந்திரி ஃபசல் பீமா யோஜனா", "பிரதான் மந்திரி சூர்யா கர்"],
+        home: "முகப்பு",
+        footer: "Sahayak AI | அரசு சேவைகள் எளிமையாக"
+    },
+
+    Kannada: {
+        title: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಅರ್ಜಿ ಮಾರ್ಗದರ್ಶಿ",
+        subtitle: "ಅರ್ಜಿ ಸಲ್ಲಿಸಲು ಬೇಕಾದ ದಾಖಲೆಗಳು ಮತ್ತು ಹಂತಗಳನ್ನು ತಿಳಿಯಿರಿ.",
+        select: "ಸರ್ಕಾರಿ ಯೋಜನೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+        choose: "ಯೋಜನೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+        button: "ಅರ್ಜಿ ಮಾರ್ಗದರ್ಶಿ ಪಡೆಯಿರಿ",
+        documents: "ಅಗತ್ಯ ದಾಖಲೆಗಳು",
+        steps: "ಅರ್ಜಿ ಸಲ್ಲಿಸುವ ವಿಧಾನ",
+        note: "ಗಮನಿಸಿ:",
+        warning: "ದಾಖಲೆಗಳು ಮತ್ತು ವಿಧಾನಗಳು ಬದಲಾಗಬಹುದು. ಇತ್ತೀಚಿನ ಮಾಹಿತಿಯನ್ನು ಅಧಿಕೃತ ಮೂಲಗಳಲ್ಲಿ ಪರಿಶೀಲಿಸಿ.",
+        alert: "ದಯವಿಟ್ಟು ಒಂದು ಯೋಜನೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+        schemes: ["ಜಗನಣ್ಣ ವಿದ್ಯಾ ದೀವೇನ", "PM-KISAN", "ಆಯುಷ್ಮಾನ್ ಭಾರತ್ PM-JAY", "PMKVY", "ಪ್ರಧಾನ ಮಂತ್ರಿ ಆವಾಸ್ ಯೋಜನೆ", "ಪ್ರಧಾನ ಮಂತ್ರಿ ಉಜ್ವಲ ಯೋಜನೆ", "ಪ್ರಧಾನ ಮಂತ್ರಿ ಫಸಲ್ ಬಿಮಾ ಯೋಜನೆ", "ಪ್ರಧಾನ ಮಂತ್ರಿ ಸೂರ್ಯ ಘರ್"],
+        home: "ಮುಖಪುಟ",
+        footer: "ಸಹಾಯಕ್ AI | ಸರ್ಕಾರಿ ಸೇವೆಗಳು ಸರಳವಾಗಿ"
+    }
+};
+
+const schemeNames = {
+    education: "Vidya Deevena",
+    farmer: "PM-KISAN",
+    health: "Ayushman Bharat PM-JAY",
+    skill: "PMKVY",
+    housing: "PM Awas Yojana",
+    women: "PM Ujjwala Yojana",
+    crop: "PM Fasal Bima Yojana",
+    solar: "PM Surya Ghar"
+};
+
+function changeGuideLanguage(language) {
+    const t = guideTranslations[language] || guideTranslations.English;
+
+    document.querySelector(".hero h1").textContent = t.title;
+    document.querySelector(".hero p").textContent = t.subtitle;
+    document.querySelector(".container h2").textContent = t.select;
+    document.querySelector("header a").textContent = t.home;
+    document.querySelector("button").textContent = t.button;
+    document.querySelector("footer").textContent = t.footer;
+
+    const schemeSelect = document.getElementById("scheme");
+    schemeSelect.options[0].textContent = t.choose;
+
+    const values = ["education", "farmer", "health", "skill", "housing", "women", "crop", "solar"];
+
+    values.forEach((value, index) => {
+        schemeSelect.querySelector(`option[value="${value}"]`).textContent =
+            t.schemes[index];
+    });
+
+    document.getElementById("languageSelector").value = language;
+    localStorage.setItem("selectedLanguage", language);
+
+    // Refresh an already displayed guide in the selected language
+    if (schemeSelect.value) {
+        showGuide();
+    }
+}
+
+function showGuide() {
+    const scheme = document.getElementById("scheme").value;
+    const result = document.getElementById("result");
+
+    const language = localStorage.getItem("selectedLanguage") || "English";
+    const t = guideTranslations[language] || guideTranslations.English;
+
+    const guides = {
+        education: {
+            documents: [
+                "Aadhaar Card",
+                "Income Certificate",
+                "Student College Details",
+                "Bank Account Details"
+            ],
+            steps: [
+                "Check the current scheme availability.",
+                "Contact the concerned college or welfare department.",
+                "Submit the required documents.",
+                "Verify your application status."
+            ]
+        },
+        farmer: {
+            documents: [
+                "Aadhaar Card",
+                "Land Ownership Records",
+                "Bank Account Details",
+                "Mobile Number"
+            ],
+            steps: [
+                "Visit the official PM-KISAN portal.",
+                "Complete the required registration process.",
+                "Provide the necessary details.",
+                "Complete e-KYC if required.",
+                "Check your beneficiary status."
+            ]
+        },
+        health: {
+            documents: [
+                "Aadhaar Card or accepted identity proof",
+                "Ration Card or family identification details",
+                "Other documents required for beneficiary verification"
+            ],
+            steps: [
+                "Check whether your family is eligible.",
+                "Visit an authorized Ayushman Bharat helpdesk.",
+                "Complete beneficiary verification.",
+                "Obtain your Ayushman card if eligible."
+            ]
+        },
+        skill: {
+            documents: [
+                "Aadhaar Card",
+                "Educational Certificates",
+                "Mobile Number",
+                "Other documents required by the training centre"
+            ],
+            steps: [
+                "Find an available training programme.",
+                "Check the eligibility requirements.",
+                "Register through an authorized training centre.",
+                "Attend the training programme."
+            ]
+        },
+        housing: {
+    documents: [
+        "Aadhaar Card",
+        "Income Certificate",
+        "Address Proof",
+        "Land or House Documents (if applicable)"
+    ],
+    steps: [
+        "Check whether you qualify for the scheme.",
+        "Identify the applicable rural or urban housing scheme.",
+        "Visit the official PM Awas Yojana portal.",
+        "Submit the required details and documents.",
+        "Check your application status."
+    ]
+},
+
+women: {
+    documents: [
+        "Aadhaar Card",
+        "Ration Card",
+        "Address Proof",
+        "Bank Account Details"
+    ],
+    steps: [
+        "Check the household eligibility requirements.",
+        "Visit an authorized LPG distributor or official portal.",
+        "Submit the required KYC documents.",
+        "Complete the verification process."
+    ]
+},
+
+crop: {
+    documents: [
+        "Aadhaar Card",
+        "Land Records",
+        "Bank Account Details",
+        "Crop Details"
+    ],
+    steps: [
+        "Check the notified crops and enrollment dates.",
+        "Contact an authorized bank or service centre.",
+        "Submit the required land and crop details.",
+        "Complete the application process.",
+        "Keep the application acknowledgment."
+    ]
+},
+
+solar: {
+    documents: [
+        "Electricity Consumer Number",
+        "Recent Electricity Bill",
+        "Identity and Address Proof",
+        "Bank Account Details"
+    ],
+    steps: [
+        "Visit the official PM Surya Ghar portal.",
+        "Register using your electricity consumer details.",
+        "Follow the instructions for vendor selection.",
+        "Complete installation and inspection as required.",
+        "Check the subsidy application status."
+    ]
+}
+    };
+
+    if (!scheme) {
+        alert(t.alert);
+        return;
+    }
+    
+    console.log("Selected Scheme:", scheme);
+    console.log("Guide Data:", guides[scheme]);  
+
+    const data = guides[scheme];
+
+    result.style.display = "block";
+
+    result.innerHTML = `
+        <h2>${schemeNames[scheme]}</h2>
+
+        <h3>${t.documents}</h3>
+        <ul>
+            ${data.documents.map(doc => `<li>${doc}</li>`).join("")}
+        </ul>
+
+        <h3>${t.steps}</h3>
+        <ol>
+            ${data.steps.map(step => `<li>${step}</li>`).join("")}
+        </ol>
+
+        <p><b>${t.note}</b> ${t.warning}</p>
+    `;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const saved = localStorage.getItem("selectedLanguage") || "English";
+    changeGuideLanguage(saved);
+});
+</script>
+
+</body>
+</html>

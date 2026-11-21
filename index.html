@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahayak AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f8fc;
+            color: #263445;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #174b83;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            margin-left: 25px;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: #e67e22;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(120deg, #e7f2ff, #fff4e6);
+        }
+
+        .hero h1 {
+            font-size: 45px;
+            color: #174b83;
+            margin-bottom: 20px;
+        }
+
+        .hero h2 {
+            font-size: 25px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 17px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* Features */
+        .features {
+            padding: 60px 8%;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 30px;
+            margin-bottom: 35px;
+            color: #174b83;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: #174b83;
+            margin-bottom: 15px;
+            font-size: 23px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            min-height: 55px;
+        }
+
+        /* Card Buttons */
+        .card-button {
+            display: inline-block;
+            padding: 14px 20px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 6px;
+            background: #174b83;
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .card-button:hover {
+            background: #e67e22;
+        }
+
+        /* Footer */
+        footer {
+            background: #174b83;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav a {
+                margin: 8px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero h2 {
+                font-size: 21px;
+            }
+
+            .features {
+                padding: 40px 6%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    
+<nav>
+    <div class="logo">Sahayak AI</div>
+
+    <div>
+        <a href="/">Home</a>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+
+        <select id="languageSelector" onchange="changeLanguage(this.value)">
+            <option value="English">English</option>
+            <option value="Telugu">తెలుగు</option>
+            <option value="Hindi">हिंदी</option>
+            <option value="Tamil">தமிழ்</option>
+            <option value="Kannada">ಕನ್ನಡ</option>
+        </select>
+    </div>
+</nav>
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+
+        <h1>Welcome to Sahayak AI</h1>
+
+        <h2>Your Voice. Your Language.</h2>
+
+        <p>
+            Discover Government Schemes Easily.
+            Get Information in Your Own Language.
+        </p>
+
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+
+        <h2>What We Offer</h2>
+
+        <div class="cards">
+
+            <!-- Scheme Search -->
+            <div class="card">
+                <h3>Scheme Search</h3>
+
+                <p>
+                    Find government schemes based on your needs.
+                </p>
+
+                <a href="/schemes" class="card-button">
+                    Explore Schemes
+                </a>
+            </div>
+
+            <!-- Eligibility Checker -->
+            <div class="card">
+                <h3>Eligibility Checker</h3>
+
+                <p>
+                    Discover schemes that match your basic details.
+                </p>
+
+                <a href="/eligibility" class="card-button">
+                    Check Eligibility
+                </a>
+            </div>
+
+            <!-- AI Assistant -->
+            <div class="card">
+                <h3>AI Assistant</h3>
+
+                <p>
+                    Get answers to your government scheme questions.
+                </p>
+
+                <a href="/chatbot" class="card-button">
+                    Open AI Assistant
+                </a>
+            </div>
+
+            <!-- Application Guide -->
+            <div class="card">
+                <h3>Application Guide</h3>
+
+                <p>
+                    Understand required documents and application procedures.
+                </p>
+
+                <a href="/guidance" class="card-button">
+                    View Application Guide
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="about">
+        <p>© 2026 Sahayak AI | Government Services Made Simple</p>
+    </footer>
+
+
+
+<script>
+const translations = {
+    English: {
+        welcome: "Welcome to Sahayak AI",
+        subtitle: "Your Voice. Your Language.",
+        intro: "Discover Government Schemes Easily. Get Information in Your Own Language.",
+        offer: "What We Offer",
+        scheme: "Scheme Search",
+        schemeDesc: "Find government schemes based on your needs.",
+        explore: "Explore Schemes",
+        eligibility: "Eligibility Checker",
+        eligibilityDesc: "Discover schemes that match your basic details.",
+        check: "Check Eligibility",
+        assistant: "AI Assistant",
+        assistantDesc: "Get answers to your government scheme questions.",
+        open: "Open AI Assistant",
+        guide: "Application Guide",
+        guideDesc: "Understand required documents and application procedures.",
+        view: "View Application Guide"
+    },
+
+    Telugu: {
+        welcome: "సహాయక్ AI కి స్వాగతం",
+        subtitle: "మీ గొంతు. మీ భాష.",
+        intro: "ప్రభుత్వ పథకాలను సులభంగా తెలుసుకోండి. మీ సొంత భాషలో సమాచారాన్ని పొందండి.",
+        offer: "మేము అందించే సేవలు",
+        scheme: "పథకాల వివరాలు",
+        schemeDesc: "మీ అవసరాలకు సరిపోయే ప్రభుత్వ పథకాలను కనుగొనండి.",
+        explore: "పథకాలను చూడండి",
+        eligibility: "అర్హత తనిఖీ",
+        eligibilityDesc: "మీ వివరాలకు సరిపోయే పథకాలను తెలుసుకోండి.",
+        check: "అర్హత తనిఖీ చేయండి",
+        assistant: "AI సహాయకుడు",
+        assistantDesc: "ప్రభుత్వ పథకాల గురించి మీ ప్రశ్నలకు సమాధానాలు పొందండి.",
+        open: "AI సహాయకుడిని తెరవండి",
+        guide: "దరఖాస్తు మార్గదర్శిని",
+        guideDesc: "అవసరమైన పత్రాలు మరియు దరఖాస్తు విధానాన్ని తెలుసుకోండి.",
+        view: "మార్గదర్శిని చూడండి"
+    },
+
+    Hindi: {
+        welcome: "सहायक AI में आपका स्वागत है",
+        subtitle: "आपकी आवाज़। आपकी भाषा।",
+        intro: "सरकारी योजनाओं को आसानी से जानें और अपनी भाषा में जानकारी प्राप्त करें।",
+        offer: "हमारी सेवाएँ",
+        scheme: "योजना खोजें",
+        schemeDesc: "अपनी ज़रूरत के अनुसार सरकारी योजनाएँ खोजें।",
+        explore: "योजनाएँ देखें",
+        eligibility: "पात्रता जाँच",
+        eligibilityDesc: "अपनी जानकारी के अनुसार योजनाएँ जानें।",
+        check: "पात्रता जाँचें",
+        assistant: "AI सहायक",
+        assistantDesc: "सरकारी योजनाओं के बारे में अपने सवालों के जवाब पाएँ।",
+        open: "AI सहायक खोलें",
+        guide: "आवेदन मार्गदर्शिका",
+        guideDesc: "आवश्यक दस्तावेज़ और आवेदन प्रक्रिया जानें।",
+        view: "मार्गदर्शिका देखें"
+    },
+
+    Tamil: {
+        welcome: "சஹாயக் AI-க்கு வரவேற்கிறோம்",
+        subtitle: "உங்கள் குரல். உங்கள் மொழி.",
+        intro: "அரசுத் திட்டங்களை எளிதாக அறிந்து உங்கள் மொழியில் தகவல்களைப் பெறுங்கள்.",
+        offer: "எங்கள் சேவைகள்",
+        scheme: "திட்டங்களைத் தேடுங்கள்",
+        schemeDesc: "உங்கள் தேவைகளுக்கு ஏற்ற அரசுத் திட்டங்களைக் கண்டறியுங்கள்.",
+        explore: "திட்டங்களைப் பாருங்கள்",
+        eligibility: "தகுதி சரிபார்ப்பு",
+        eligibilityDesc: "உங்கள் விவரங்களுக்கு ஏற்ற திட்டங்களைக் கண்டறியுங்கள்.",
+        check: "தகுதியைச் சரிபார்க்கவும்",
+        assistant: "AI உதவியாளர்",
+        assistantDesc: "அரசுத் திட்டங்கள் பற்றிய கேள்விகளுக்குப் பதில்களைப் பெறுங்கள்.",
+        open: "AI உதவியாளரைத் திறக்கவும்",
+        guide: "விண்ணப்ப வழிகாட்டி",
+        guideDesc: "தேவையான ஆவணங்கள் மற்றும் விண்ணப்ப முறையை அறியுங்கள்.",
+        view: "வழிகாட்டியைப் பாருங்கள்"
+    },
+
+    Kannada: {
+        welcome: "ಸಹಾಯಕ್ AI ಗೆ ಸ್ವಾಗತ",
+        subtitle: "ನಿಮ್ಮ ಧ್ವನಿ. ನಿಮ್ಮ ಭಾಷೆ.",
+        intro: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಸುಲಭವಾಗಿ ತಿಳಿದುಕೊಳ್ಳಿ ಮತ್ತು ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಮಾಹಿತಿ ಪಡೆಯಿರಿ.",
+        offer: "ನಮ್ಮ ಸೇವೆಗಳು",
+        scheme: "ಯೋಜನೆ ಹುಡುಕಾಟ",
+        schemeDesc: "ನಿಮ್ಮ ಅಗತ್ಯಗಳಿಗೆ ಹೊಂದುವ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಿ.",
+        explore: "ಯೋಜನೆಗಳನ್ನು ನೋಡಿ",
+        eligibility: "ಅರ್ಹತೆ ಪರಿಶೀಲನೆ",
+        eligibilityDesc: "ನಿಮ್ಮ ವಿವರಗಳಿಗೆ ಹೊಂದುವ ಯೋಜನೆಗಳನ್ನು ತಿಳಿಯಿರಿ.",
+        check: "ಅರ್ಹತೆ ಪರಿಶೀಲಿಸಿ",
+        assistant: "AI ಸಹಾಯಕ",
+        assistantDesc: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಬಗ್ಗೆ ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರ ಪಡೆಯಿರಿ.",
+        open: "AI ಸಹಾಯಕ ತೆರೆಯಿರಿ",
+        guide: "ಅರ್ಜಿ ಮಾರ್ಗದರ್ಶಿ",
+        guideDesc: "ಅಗತ್ಯ ದಾಖಲೆಗಳು ಮತ್ತು ಅರ್ಜಿ ವಿಧಾನವನ್ನು ತಿಳಿಯಿರಿ.",
+        view: "ಮಾರ್ಗದರ್ಶಿ ನೋಡಿ"
+    }
+};
+
+function applyLanguage(language) {
+    const t = translations[language] || translations.English;
+
+    document.querySelector(".hero h1").textContent = t.welcome;
+    document.querySelector(".hero h2").textContent = t.subtitle;
+    document.querySelector(".hero p").textContent = t.intro;
+    document.querySelector(".features > h2").textContent = t.offer;
+
+    const cards = document.querySelectorAll(".card");
+
+    cards[0].querySelector("h3").textContent = t.scheme;
+    cards[0].querySelector("p").textContent = t.schemeDesc;
+    cards[0].querySelector("a").textContent = t.explore;
+
+    cards[1].querySelector("h3").textContent = t.eligibility;
+    cards[1].querySelector("p").textContent = t.eligibilityDesc;
+    cards[1].querySelector("a").textContent = t.check;
+
+    cards[2].querySelector("h3").textContent = t.assistant;
+    cards[2].querySelector("p").textContent = t.assistantDesc;
+    cards[2].querySelector("a").textContent = t.open;
+
+    cards[3].querySelector("h3").textContent = t.guide;
+    cards[3].querySelector("p").textContent = t.guideDesc;
+    cards[3].querySelector("a").textContent = t.view;
+
+    localStorage.setItem("selectedLanguage", language);
+}
+
+function changeLanguage(language) {
+    applyLanguage(language);
+}
+
+window.addEventListener("DOMContentLoaded", function() {
+    const savedLanguage = localStorage.getItem("selectedLanguage") || "English";
+
+    document.getElementById("languageSelector").value = savedLanguage;
+    applyLanguage(savedLanguage);
+});
+</script>
+
+
+</body>
+</html>

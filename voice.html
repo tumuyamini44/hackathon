@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Assistant | Sahayak AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f6fc;
+            color: #222;
+        }
+
+        header {
+            background: #174a8b;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px #0001;
+        }
+
+        select {
+            padding: 10px;
+            border-radius: 7px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 13px 22px;
+            margin: 8px;
+            border: none;
+            border-radius: 8px;
+            background: #174a8b;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #response, #question {
+            background: #f1f5fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            min-height: 55px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        #status {
+            color: #174a8b;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>Sahayak AI</h2>
+    <a href="/">Home</a>
+</header>
+
+<div class="container">
+
+    <h1>🎙️ Voice Assistant</h1>
+    <p>Speak your question and get an AI voice response.</p>
+
+    <label for="voiceLanguage">Choose Language:</label>
+    <br><br>
+
+    <select id="voiceLanguage">
+        <option value="English">English</option>
+        <option value="Telugu">తెలుగు</option>
+        <option value="Hindi">हिंदी</option>
+        <option value="Tamil">தமிழ்</option>
+        <option value="Kannada">ಕನ್ನಡ</option>
+    </select>
+
+    <br><br>
+
+    <button id="micButton" onclick="startListening()">
+        🎤 Start Speaking
+    </button>
+
+    <button onclick="stopSpeaking()">
+        🔇 Stop Voice
+    </button>
+
+    <p id="status">Select a language and click Start Speaking.</p>
+
+    <h3>Your Question</h3>
+    <div id="question">Your spoken question will appear here.</div>
+
+    <h3>AI Answer</h3>
+    <div id="response">Your AI answer will appear here.</div>
+
+</div>
+
+<script>
+
+const languageSettings = {
+    English: { speech: "en-IN" },
+    Telugu: { speech: "te-IN" },
+    Hindi: { speech: "hi-IN" },
+    Tamil: { speech: "ta-IN" },
+    Kannada: { speech: "kn-IN" }
+};
+
+let recognition;
+
+function startListening() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        document.getElementById("status").textContent =
+            "Speech recognition is not supported. Please use Chrome.";
+        return;
+    }
+
+    const selectedLanguage =
+        document.getElementById("voiceLanguage").value;
+
+    recognition = new SpeechRecognition();
+
+    recognition.lang =
+        languageSettings[selectedLanguage].speech;
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = function () {
+        document.getElementById("status").textContent =
+            "Listening... Speak now!";
+        document.getElementById("micButton").disabled = true;
+    };
+
+    recognition.onresult = function (event) {
+
+        const spokenText =
+            event.results[0][0].transcript;
+
+        document.getElementById("question").textContent =
+            spokenText;
+
+        sendToAI(spokenText, selectedLanguage);
+    };
+
+    recognition.onerror = function () {
+        document.getElementById("status").textContent =
+            "Voice not recognized. Please try again.";
+        document.getElementById("micButton").disabled = false;
+    };
+
+    recognition.onend = function () {
+        document.getElementById("micButton").disabled = false;
+    };
+
+    recognition.start();
+}
+
+async function sendToAI(message, selectedLanguage) {
+
+    document.getElementById("status").textContent =
+        "AI is thinking...";
+
+    try {
+
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: message +
+                    "\nReply completely in " +
+                    selectedLanguage +
+                    " only. Use simple words."
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("AI request failed");
+        }
+
+        const data = await response.json();
+
+        const answer = data.reply;
+
+        document.getElementById("response").textContent =
+            answer;
+
+        speakAnswer(answer, selectedLanguage);
+
+    } catch (error) {
+
+        document.getElementById("status").textContent =
+            "Unable to get AI response. Please try again.";
+
+        console.error(error);
+    }
+}
+
+function speakAnswer(answer, selectedLanguage) {
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(answer);
+
+    speech.lang =
+        languageSettings[selectedLanguage].speech;
+
+    speech.onstart = function () {
+        document.getElementById("status").textContent =
+            "AI is speaking...";
+    };
+
+    speech.onend = function () {
+        document.getElementById("status").textContent =
+            "You can ask another question.";
+    };
+
+    window.speechSynthesis.speak(speech);
+}
+
+function stopSpeaking() {
+
+    window.speechSynthesis.cancel();
+
+    if (recognition) {
+        recognition.stop();
+    }
+
+    document.getElementById("status").textContent =
+        "Voice stopped.";
+
+    document.getElementById("micButton").disabled = false;
+}
+
+</script>
+
+</body>
+</html>
